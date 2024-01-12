@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:complexType name="FieldType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="age" type="xs:int"/>
+            <xs:element name="height" type="xs:double"/>
+            <xs:element name="healthy" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HeaderType">
+        <xs:sequence>
+            <xs:element name="currentID" type="xs:int"/>
+            <xs:element name="fields">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Type0" type="xs:string"/>
+                        <xs:element name="Type1" type="xs:string"/>
+                        <xs:element name="Type2" type="xs:string"/>
+                        <xs:element name="Type3" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ResponseType">
+        <xs:sequence>
+            <xs:element name="header" type="HeaderType"/>
+            <xs:element name="fields" type="FieldType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="response" type="ResponseType"/>
+
+</xs:schema>
