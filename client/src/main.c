@@ -1,6 +1,7 @@
 #include "../include/parser.h"
 #include "../include/view.h"
 #include "../include/client.h"
+#include "../../schema/xml_validator.c"
 
 void free_request(struct request *request) {
     if (request->attributes) {
@@ -19,6 +20,7 @@ void free_request(struct request *request) {
 
 int main(int argc, char **argv) {
 
+    const char *xsd_filename = "../../schema/request.xsd";
     while (1) {
 
         int size_tree;
@@ -39,13 +41,15 @@ int main(int argc, char **argv) {
         //get_request_view(request);
 
         request_tree = xmlNewDoc(BAD_CAST "1.0");
+        int validate_result = validate_request_xml(request_tree, &xsd_filename);
+
         status = get_xml(request, request_tree);
         xmlChar *str_tree = (xmlChar *) malloc(sizeof(xmlChar) * MAX_REQUEST_SIZE);
         xmlDocDumpMemory(request_tree, &str_tree, &size_tree);
 
         printf("%s\n", (char *) str_tree);
 
-        if (status == WRAP_OK) sendRequest(atoi(argv[1]), size_tree, (char *) str_tree);
+        if (status == WRAP_OK && !validate_result) sendRequest(atoi(argv[1]), size_tree, (char *) str_tree);
 
         free(str_tree);
         free_request(request);
