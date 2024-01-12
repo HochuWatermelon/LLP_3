@@ -3,6 +3,7 @@
 #include "../include/utils/wrapper.h"
 #include "../include/server.h"
 #include "../include/utils/executor.h"
+#include "../../schema/xml_validator.c"
 
 void print_tuple(FILE *file, struct tuple *tuple) {
     printf("{\n");
@@ -135,13 +136,16 @@ int main(int argc, char **argv) {
 
     printf("server stated\n");
 
+    const char *xsd_filename = "../../schema/response.xsd";
+
     while (1) {
 
         char *request_xml = calloc(MAX_REQUEST_SIZE, sizeof(char));
 
         int fd = handler_request(server, request_xml);
 
-        execute_request(request_xml, file, fd);
+        int validate_result = validate_response_xml(&request_xml, &xsd_filename);
+        if(!validate_result) execute_request(request_xml, file, fd);
 
         print_tuple_array_from_file(file);
     }
